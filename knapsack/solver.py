@@ -13,9 +13,9 @@ def solve_it(input_data):
     tmp_file.write(input_data)
     tmp_file.close()
 
-    # Runs the command: ./knapsack tmp_file_name
+    # Runs the command: ./knapsack.bin tmp_file_name
 
-    process = Popen(['./knapsack', tmp_file_name], stdout=PIPE)
+    process = Popen(['./knapsack.bin', tmp_file_name], stdout=PIPE)
     (stdout, stderr) = process.communicate()
 
     # removes the temporay file

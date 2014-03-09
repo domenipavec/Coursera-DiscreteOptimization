@@ -13,6 +13,7 @@
 
 using namespace std;
 
+// load from file (check handout.pdf for format)
 Knapsack::Knapsack(const char * const filename) {
 	ifstream ifile;
 	ifile.open(filename, ios::in);

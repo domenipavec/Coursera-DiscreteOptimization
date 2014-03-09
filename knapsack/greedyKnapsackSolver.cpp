@@ -1,5 +1,5 @@
 /*
- * knapsackSolver.cpp
+ * greedyKnapsackSolver.cpp
  * 
  * Copyright 2014 Domen <domen.ipavec@z-v.si>
  * 
@@ -22,6 +22,7 @@ bool sortFunction(dip a, dip b) {
 	return a.second < b.second;
 }
 
+// Sort by value/weight and use largest
 void KnapsackSolver::solve() {
 	dip a;
 	vector<dip> doubleIdPair(knapsack->nitems, a);

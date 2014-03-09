@@ -14,3 +14,6 @@
 
 # Python compiled
 *.pyc
+
+# Compiled executable
+*.bin

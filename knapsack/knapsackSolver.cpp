@@ -22,6 +22,7 @@ KnapsackSolver::KnapsackSolver(Knapsack * ks)
 	}
 }
 
+// format solution (check handout.pdf for format)
 string KnapsackSolver::solution() {
 	stringstream ret("");
 	ret << total << ' ' << optimal << endl;
