@@ -6,6 +6,9 @@ OBJS := $(SOURCES:.cpp=.o)
 
 CC := g++
 
+CFLAGS := -fopenmp
+LFLAGS := -lpthread
+
 all: knapsack.bin
 
 # Compile the binary 'knapsack' by calling the compiler with cflags, lflags, and any libs (if defined) and the list of objects.
@@ -18,4 +21,4 @@ knapsack.bin: $(OBJS)
 
 clean:
 	rm *.o
-	rm knapsack
+	rm knapsack.bin
