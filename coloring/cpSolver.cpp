@@ -11,7 +11,7 @@
 
 CPSolver::CPSolver(Graph * g) {
     graph = g;
-    verticesColorSS = new ColorSearchSpace[graph->nVertices];
+    state = new State(graph);
     optimal = false;    
 }
 
@@ -19,9 +19,26 @@ Solution * CPSolver::solution() {
     Solution * s = new Solution(graph->nVertices);
     s->optimal = optimal;
     for (uint16_t i = 0; i < graph->nVertices; i++) {
-        s->verticesColors[i] = verticesColorSS[i].firstBit();
+        s->verticesColors[i] = state->verticesColorSS[i].firstBit();
     }
     return s;
+}
+
+State::State(Graph *g) {
+    graph = g;
+    verticesColorSS = new ColorSearchSpace[graph->nVertices];
+}
+
+State::State(State *s) {
+    State(s->verticesColorSS, s->graph);
+}
+
+State::State(ColorSearchSpace * css, Graph *g) {
+    graph = g;
+    verticesColorSS = new ColorSearchSpace[graph->nVertices];
+    for (uint16_t i = 0; i < graph->nVertices; i++) {
+        verticesColorSS[i] = css[i];
+    }
 }
 
 ColorSearchSpace::ColorSearchSpace() {

@@ -1,5 +1,5 @@
 
-SOURCES := main.cpp graph.cpp solution.cpp cpSolver.cpp cpSolver-greedy.cpp
+SOURCES := main.cpp graph.cpp solution.cpp cpSolver.cpp cpSolver-branching.cpp
 
 BINARY := coloring.bin
 

@@ -29,6 +29,17 @@ class ColorSearchSpace {
         uint64_t colors[CSS];
 };
 
+class State {
+    public:
+        State(Graph * g);
+        State(State * s);
+        State(ColorSearchSpace * css, Graph * g);
+        
+        ColorSearchSpace * verticesColorSS;
+        Graph * graph;
+        uint16_t colors;
+};
+
 class CPSolver {
     public:
         CPSolver(Graph * g);
@@ -37,7 +48,7 @@ class CPSolver {
         
     
         Graph * graph;
-        ColorSearchSpace * verticesColorSS;
+        State * state;
         bool optimal;
 };
 
