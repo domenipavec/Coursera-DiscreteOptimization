@@ -37,10 +37,6 @@ void CPSolver::solve() {
         std::cerr << i << "," << it->second << std::endl;
         
         uint16_t color = state->verticesColorSS[i].firstBit();
-        for (std::vector<uint16_t>::iterator it = graph->edgesTo[i].begin(); 
-                it != graph->edgesTo[i].end(); 
-                ++it) {
-            state->verticesColorSS[*it].clearBit(color);
-        }
+        state->setColor(i, color);
     }
 }

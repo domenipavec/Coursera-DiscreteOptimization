@@ -41,6 +41,15 @@ State::State(ColorSearchSpace * css, Graph *g) {
     }
 }
 
+void State::setColor(uint16_t i, uint16_t color) {
+    verticesColorSS[i].setColor(color);
+    for (std::vector<uint16_t>::iterator it = graph->edgesTo[i].begin(); 
+            it != graph->edgesTo[i].end(); 
+            ++it) {
+        verticesColorSS[*it].clearBit(color);
+    }
+}
+
 ColorSearchSpace::ColorSearchSpace() {
     for (uint8_t i = 0; i < CSS; i++) {
         colors[i] = 0xFFFFFFFFFFFFFFFFULL;
@@ -63,6 +72,15 @@ void ColorSearchSpace::setBit(uint16_t n) {
     uint8_t i = n/64;
     uint8_t bit = n%64;
     colors[i] |= (1ULL << bit);    
+}
+
+void ColorSearchSpace::setColor(uint16_t n) {
+    uint8_t i = n/64;
+    uint8_t bit = n%64;
+    for (uint8_t j = 0; j < CSS; j++) {
+        colors[j] = 0;
+    }
+    colors[i] = (1ULL << bit);
 }
 
 uint16_t ColorSearchSpace::firstBit() {

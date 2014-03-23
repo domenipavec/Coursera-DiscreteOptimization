@@ -23,6 +23,7 @@ class ColorSearchSpace {
         bool isBitSet(uint16_t n);
         void clearBit(uint16_t n);       
         void setBit(uint16_t n);
+        void setColor(uint16_t n);
         uint16_t firstBit();
     private:
         uint8_t firstBit64(const uint64_t i);
@@ -34,6 +35,7 @@ class State {
         State(Graph * g);
         State(State * s);
         State(ColorSearchSpace * css, Graph * g);
+        void setColor(uint16_t i, uint16_t color);
         
         ColorSearchSpace * verticesColorSS;
         Graph * graph;
