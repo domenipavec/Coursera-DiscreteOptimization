@@ -24,21 +24,26 @@ Solution * CPSolver::solution() {
     return s;
 }
 
-State::State(Graph *g) {
-    graph = g;
-    verticesColorSS = new ColorSearchSpace[graph->nVertices];
+State::State(State *s) : State(s->verticesColorSS, s->graph)
+{
+    colors = s->colors;
 }
 
-State::State(State *s) {
-    State(s->verticesColorSS, s->graph);
-}
-
-State::State(ColorSearchSpace * css, Graph *g) {
-    graph = g;
-    verticesColorSS = new ColorSearchSpace[graph->nVertices];
+State::State(ColorSearchSpace * css, Graph *g) : State( g )
+{
     for (uint16_t i = 0; i < graph->nVertices; i++) {
         verticesColorSS[i] = css[i];
     }
+}
+
+State::State(Graph *g) {
+    graph = g;
+    verticesColorSS = new ColorSearchSpace[graph->nVertices];
+    colors = 0;
+}
+
+State::~State() {
+    delete verticesColorSS;
 }
 
 void State::setColor(uint16_t i, uint16_t color) {

@@ -32,9 +32,10 @@ class ColorSearchSpace {
 
 class State {
     public:
-        State(Graph * g);
         State(State * s);
         State(ColorSearchSpace * css, Graph * g);
+        State(Graph * g);
+        ~State();
         void setColor(uint16_t i, uint16_t color);
         
         ColorSearchSpace * verticesColorSS;

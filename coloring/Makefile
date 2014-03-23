@@ -8,7 +8,7 @@ OBJS := $(SOURCES:.cpp=.o)
 
 CC := g++
 
-CFLAGS :=
+CFLAGS := 
 #-fopenmp
 LFLAGS := 
 #-lpthread

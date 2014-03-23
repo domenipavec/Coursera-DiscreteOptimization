@@ -20,6 +20,7 @@ Graph::Graph(const char * const fn) {
     if (ifile.is_open()) {
         ifile >> nVertices;
         ifile >> nEdges;
+        cerr << "Vertices: " << nVertices << ", Edges: " << nEdges << endl;
         edges = new Edge[nEdges];
         edgesTo = new vector<uint16_t>[nVertices];
         for (uint32_t i = 0; i < nEdges; i++) {
