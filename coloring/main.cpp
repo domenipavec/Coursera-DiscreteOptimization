@@ -23,8 +23,16 @@ int main(int argc, char **argv)
 
     Graph g(argv[1]);
     
+    std::vector<SubGraph *> * cs = g.cliques();
+    std::cerr << "Cliques: " << cs->size() << std::endl;
+    for (std::vector<SubGraph *>::iterator it = cs->begin(); it != cs->end(); ++it) {
+        std::cerr << "Clique: " << std::endl;
+        std::cerr << *(*it);
+        std::cerr << std::endl;
+    }
+    
     CPSolver solver(&g);
-    solver.solve();
+    //solver.solve();
     Solution * s = solver.solution();
     
     std::cout << *s;
