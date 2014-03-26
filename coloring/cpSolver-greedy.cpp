@@ -25,7 +25,7 @@ void CPSolver::solve() {
     // sort by number of edges descending
     vector_t vertexIndexNumberOfEdges;
     for (uint16_t i = 0; i < graph->nVertices; i++) {
-        vertexIndexNumberOfEdges.push_back(std::make_pair(i, graph->edgesTo[i].size()));
+        vertexIndexNumberOfEdges.push_back(std::make_pair(i, graph->neighbours[i].size()));
     }
     std::sort(vertexIndexNumberOfEdges.begin(), vertexIndexNumberOfEdges.end(), sortFunction);
     

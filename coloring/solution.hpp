@@ -12,6 +12,7 @@
 
 #include <stdint.h>
 #include <ostream>
+#include <vector>
 
 class Solution {
     public:
@@ -20,7 +21,7 @@ class Solution {
     public:
         bool optimal;
         uint16_t nVertices;
-        uint16_t * verticesColors;    
+        std::vector<uint16_t> verticesColors;    
 };
 
 std::ostream &operator<<(std::ostream &os, Solution const &s);

@@ -9,47 +9,41 @@
 
 #include "cpSolver.hpp"
 
-CPSolver::CPSolver(Graph * g) {
-    graph = g;
-    state = new State(graph);
-    optimal = false;    
+CPSolver::CPSolver(Graph * g)
+        : graph(g), state(g), optimal(false) {
 }
 
-Solution * CPSolver::solution() {
-    Solution * s = new Solution(graph->nVertices);
-    s->optimal = optimal;
-    for (uint16_t i = 0; i < graph->nVertices; i++) {
-        s->verticesColors[i] = state->verticesColorSS[i].firstBit();
-    }
+Solution CPSolver::solution() {
+    Solution s(graph->nVertices);
+    s.optimal = optimal;
+    for (Colors::iterator it = state.verticesColorSS.begin(); it != state.verticesColorSS.end(); ++it) {
+        s.verticesColors.push_back(it->firstBit());
+    } 
     return s;
 }
 
-State::State(State *s) : State(s->verticesColorSS, s->graph)
+State::State(const State & s)
+        : colors(s.colors),
+        verticesColorSS(s.verticesColorSS), 
+        graph(s.graph),
+        valid(s.valid),
+        solution(s.solution)
 {
-    colors = s->colors;
 }
 
-State::State(ColorSearchSpace * css, Graph *g) : State( g )
+State::State(Graph *g) :
+        graph(g), 
+        colors(0), 
+        verticesColorSS(g->nVertices, ColorSearchSpace()), 
+        valid(true),
+        solution(false)
 {
-    for (uint16_t i = 0; i < graph->nVertices; i++) {
-        verticesColorSS[i] = css[i];
-    }
-}
-
-State::State(Graph *g) {
-    graph = g;
-    verticesColorSS = new ColorSearchSpace[graph->nVertices];
-    colors = 0;
-}
-
-State::~State() {
-    delete verticesColorSS;
 }
 
 void State::setColor(uint16_t i, uint16_t color) {
     verticesColorSS[i].setColor(color);
-    for (std::vector<uint16_t>::iterator it = graph->edgesTo[i].begin(); 
-            it != graph->edgesTo[i].end(); 
+    for (Vertices::iterator it = graph->neighbours[i].begin(); 
+            it != graph->neighbours[i].end(); 
             ++it) {
         verticesColorSS[*it].clearBit(color);
     }
@@ -61,7 +55,7 @@ ColorSearchSpace::ColorSearchSpace() {
     }
 }
 
-bool ColorSearchSpace::isBitSet(uint16_t n) {
+bool ColorSearchSpace::isBitSet(uint16_t n) const {
     uint8_t i = n/64;
     uint8_t bit = n%64;
     return (colors[i] & (1ULL << bit)) != 0;
@@ -88,13 +82,13 @@ void ColorSearchSpace::setColor(uint16_t n) {
     colors[i] = (1ULL << bit);
 }
 
-uint16_t ColorSearchSpace::firstBit() {
+uint16_t ColorSearchSpace::firstBit() const {
     uint16_t i = 0;
     while (colors[i] == 0) i++;
     return i*64 + firstBit64(colors[i]);
 }
 
-uint8_t ColorSearchSpace::firstBit64(const uint64_t i) {
+uint8_t ColorSearchSpace::firstBit64(const uint64_t i) const {
     static const int index64[64] = {
         63,  0, 58,  1, 59, 47, 53,  2,
         60, 39, 48, 27, 54, 33, 42,  3,

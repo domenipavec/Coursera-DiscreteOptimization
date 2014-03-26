@@ -21,21 +21,15 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    Graph g(argv[1]);
+    static const bool USE_CLIQUES = false;
     
-    std::vector<SubGraph *> * cs = g.cliques();
-    std::cerr << "Cliques: " << cs->size() << std::endl;
-    for (std::vector<SubGraph *>::iterator it = cs->begin(); it != cs->end(); ++it) {
-        std::cerr << "Clique: " << std::endl;
-        std::cerr << *(*it);
-        std::cerr << std::endl;
-    }
-    
+    Graph g(argv[1], USE_CLIQUES);
+        
     CPSolver solver(&g);
-    //solver.solve();
-    Solution * s = solver.solution();
+    solver.solve();
+    Solution s = solver.solution();
     
-    std::cout << *s;
+    std::cout << s;
 
     return 0;
 }

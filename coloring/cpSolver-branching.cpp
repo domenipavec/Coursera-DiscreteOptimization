@@ -13,6 +13,7 @@
 #include <utility>
 #include <algorithm>
 #include <iostream>
+#include <queue>
 
 bool sortFunction(std::pair<uint16_t, uint16_t> p1, std::pair<uint16_t, uint16_t> p2) {
     return p1.second > p2.second;
@@ -20,66 +21,68 @@ bool sortFunction(std::pair<uint16_t, uint16_t> p1, std::pair<uint16_t, uint16_t
 
 typedef std::pair<uint16_t, uint16_t> pair_t;
 typedef std::vector<pair_t> vector_t;
+vector_t vertexIndexNumberOfEdges;
 
-void solveRecursion(State **s, uint16_t level, vector_t * indices, const uint16_t maxColors) {
-    State * min = NULL;
-    uint16_t colors_min = 65535;
-    uint16_t i = (*indices)[level].first;
+State solveRecursion(const State &s, uint16_t level, const uint16_t maxColors) {    
+    // get real index based on ordering
+    uint16_t i = vertexIndexNumberOfEdges[level].first;
+    
+    // debug output
     if (level < 7) {
-        std::cerr << level << ", " << (*s)->colors << ", " << (*s)->verticesColorSS[(*indices)[level - 1].first].firstBit() <<std::endl;
+        std::cerr << level << ", " << s.colors << ", " << s.verticesColorSS[vertexIndexNumberOfEdges[level - 1].first].firstBit() << std::endl;
     }
     
     // at deepest level return first color
-    if (level == ((*s)->graph->nVertices - 1)) {
-        uint16_t color = (*s)->verticesColorSS[i].firstBit();
-        (*s)->setColor(i, color);
-        return;
-    }
-    
-    // loop through available colors
-    for (uint16_t c = 0; c < (*s)->colors; c++) {
-        if ((*s)->verticesColorSS[i].isBitSet(c)) {
-            State * newState = new State(*s);
-            newState->setColor(i, c);
-            solveRecursion(&newState, level+1, indices, maxColors);
-            if (newState != NULL) {
-                if (newState->colors < colors_min) {
-                    min = newState;
-                    colors_min = newState->colors;
-                    if (colors_min == (*s)->colors) break;
-                } else {
-                    delete newState;
-                }
-            }
+    if (level == s.graph->nVertices - 1) {
+        uint16_t color = s.verticesColorSS[i].firstBit();
+        if (color < maxColors) {
+            State sol(s);
+            sol.setColor(i, color);
+            sol.solution = true;
+            return sol;
+        } else {
+            return s;
         }
     }
     
-    // try using new color if we don't have optimal and not at MAX colors
-    if (colors_min != (*s)->colors && (*s)->colors < maxColors) {
-        State * newState = new State(*s);
-        newState->setColor(i, (*s)->colors);
-        newState->colors++;
-        solveRecursion(&newState, level+1, indices, maxColors);
-        if (newState != NULL) {
-            if (newState->colors < colors_min) {
-                min = newState;
-                colors_min = newState->colors;
-            } else {
-                delete newState;
+    // make a queue of all possible branches
+    std::queue<State> branches;
+    // all available colors
+    for (uint16_t c = 0; c < s.colors; c++) {
+        if (s.verticesColorSS[i].isBitSet(c)) {
+            State newState(s);
+            newState.setColor(i, c);
+            if (newState.valid) {
+                branches.push(newState);
             }
         }
     }
+    // try using new color
+    if (s.colors < maxColors) {
+        State newState(s);
+        newState.setColor(i, s.colors);
+        if (newState.valid) {
+            newState.colors++;
+            branches.push(newState);
+        }
+    }
     
-    // return optimal
-    delete (*s);
-    (*s) = min;    
+    // try all branches for solution
+    while (!branches.empty()) {
+        State sr = solveRecursion(branches.front(), level+1, maxColors);
+        if (sr.solution) {
+            return sr;
+        }
+        branches.pop();
+    }
+    
+    return s;
 }
 
 void CPSolver::solve() {
     // sort by number of edges descending
-    vector_t vertexIndexNumberOfEdges;
     for (uint16_t i = 0; i < graph->nVertices; i++) {
-        vertexIndexNumberOfEdges.push_back(std::make_pair(i, graph->edgesTo[i].size()));
+        vertexIndexNumberOfEdges.push_back(std::make_pair(i, graph->neighbours[i].size()));
     }
     std::sort(vertexIndexNumberOfEdges.begin(), vertexIndexNumberOfEdges.end(), sortFunction);
     
@@ -87,11 +90,9 @@ void CPSolver::solve() {
     static const uint16_t MAXMAXCOLORS = 20;
     for (uint16_t max = 2; max < MAXMAXCOLORS; max++) {
         std::cerr << "Running for " << max << " colors." << std::endl;
-        State * s = new State(state);
-        solveRecursion(&s, 0, &vertexIndexNumberOfEdges, max);
-        if (s != NULL) {
+        State s = solveRecursion(state, 0, max);
+        if (s.solution) {
             optimal = true;
-            delete state;
             state = s;
             break;
         }

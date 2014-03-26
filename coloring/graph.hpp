@@ -12,48 +12,34 @@
 
 #include <stdint.h>
 #include <vector>
-#include <set>
+#include <unordered_set>
 #include <ostream>
+#include <utility>
 
-struct Edge {
-    uint16_t v1;
-    uint16_t v2;
-};
-
-class SubGraph;
+typedef std::pair<uint16_t, uint16_t> Edge;
+typedef std::unordered_set<uint16_t> Vertices;
 
 class Graph {
     public:
-        Graph(const char * const fn);
-        Graph(uint16_t nv);
-        std::vector<SubGraph *> * cliques();
-        SubGraph * neighbours(uint16_t v);
+        Graph(const char * const fn, bool c);
         
     public:
         uint16_t nVertices;
         uint32_t nEdges;
-        Edge * edges;
-        std::vector<uint16_t> * edgesTo;
+        std::vector<Edge> edges;
+        Vertices vertices;
+        std::vector<Vertices> neighbours;
+        std::vector<Vertices> cliques;
+        bool useCliques;
         
     private:
-        void BronKerbosch2(SubGraph * R, SubGraph * P, SubGraph * X);
-        std::vector<SubGraph *> * storage;
+        void BronKerbosch2(const Vertices & R, Vertices P, Vertices X);
 };
 
-class SubGraph: public Graph {
-    public:
-        SubGraph(Graph * p, std::set<uint16_t> * s);
-        ~SubGraph();
-        SubGraph * sum(SubGraph * s);
-        SubGraph * difference(SubGraph *s);
-        SubGraph * intersection(SubGraph *s);
-        SubGraph * add(uint16_t v);
-        SubGraph * remove(uint16_t v);
-        
-        Graph * parent;
-        std::set<uint16_t> * vertices;
-};
+Vertices sum(const Vertices & vs1, const Vertices & vs2);
+Vertices difference(const Vertices & vs1, const Vertices & vs2);
+Vertices intersection(const Vertices & vs1, const Vertices & vs2);
 
-std::ostream &operator<<(std::ostream &os, SubGraph const &s);
+std::ostream &operator<<(std::ostream &os, const Vertices &vs);
 
 #endif
