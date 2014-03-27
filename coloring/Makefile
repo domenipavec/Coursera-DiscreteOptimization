@@ -1,5 +1,8 @@
 
-SOURCES := main.cpp graph.cpp solution.cpp cpSolver.cpp cpSolver-branching.cpp
+CPSOLVER_TYPE := cpSolver-branching.cpp
+CPSOLVER := cpSolver.cpp $(CPSOLVER_TYPE)
+
+SOURCES := main.cpp graph.cpp solution.cpp $(CPSOLVER)
 
 BINARY := coloring.bin
 
@@ -8,10 +11,8 @@ OBJS := $(SOURCES:.cpp=.o)
 
 CC := g++
 
-CFLAGS := -std=c++11
-#-fopenmp
-LFLAGS := 
-#-lpthread
+CFLAGS := -std=c++11 -Wall -fopenmp -O3 -g -pg
+LFLAGS := -lpthread
 
 all: $(BINARY)
 

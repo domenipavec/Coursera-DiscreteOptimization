@@ -25,14 +25,14 @@ Graph::Graph(const char * const fn, bool c)
         for (uint16_t i = 0; i < nVertices; i++) {
             vertices.insert(i);
         }
-        neighbours.assign(nVertices, Vertices());
+        neighbours.assign(nVertices, std::vector<uint16_t>());
         for (uint32_t i = 0; i < nEdges; i++) {
             Edge e;
             ifile >> e.first;
             ifile >> e.second;
             edges.push_back(e);
-            neighbours[e.first].insert(e.second);
-            neighbours[e.second].insert(e.first);
+            neighbours[e.first].push_back(e.second);
+            neighbours[e.second].push_back(e.first);
         }
     } else {
         cerr << "Could not open file " << fn << endl;
@@ -58,10 +58,28 @@ Vertices difference(const Vertices & vs1, const Vertices & vs2) {
     return vs;
 }
 
+Vertices difference(const Vertices & vs1, const std::vector<uint16_t> & vs2) {
+    Vertices vs(vs1);
+    for (std::vector<uint16_t>::const_iterator it = vs2.cbegin(); it != vs2.cend(); ++it) {
+        vs.erase(*it);
+    }
+    return vs;
+}
+
 Vertices intersection(const Vertices & vs1, const Vertices & vs2) {
     Vertices vs;
-    for (Vertices::const_iterator it = vs1.cbegin(); it != vs1.cend(); ++it) {
-        if (vs2.find(*it) != vs2.cend()) {
+    for (Vertices::const_iterator it = vs2.cbegin(); it != vs2.cend(); ++it) {
+        if (vs1.find(*it) != vs1.cend()) {
+            vs.insert(*it);
+        }
+    }
+    return vs;
+}
+
+Vertices intersection(const Vertices & vs1, const std::vector<uint16_t> & vs2) {
+    Vertices vs;
+    for (std::vector<uint16_t>::const_iterator it = vs2.cbegin(); it != vs2.cend(); ++it) {
+        if (vs1.find(*it) != vs1.cend()) {
             vs.insert(*it);
         }
     }

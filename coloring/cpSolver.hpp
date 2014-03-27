@@ -16,7 +16,7 @@
 #include "graph.hpp"
 #include "solution.hpp"
 
-static const uint8_t CSS = 3; // number of 64 bit integers in color search space
+static const uint8_t CSS = 2; // number of 64 bit integers in color search space
 
 class ColorSearchSpace {
     public:
@@ -26,7 +26,8 @@ class ColorSearchSpace {
         void setBit(uint16_t n);
         void setColor(uint16_t n);
         uint16_t firstBit() const;
-    private:
+        bool set;
+
         uint8_t firstBit64(const uint64_t i) const;
         uint64_t colors[CSS];
 };
@@ -38,10 +39,12 @@ class State {
         State(const State & s);
         State(Graph * g);
         void setColor(uint16_t i, uint16_t color);
+        void clearBit(uint16_t i, uint16_t bit);
         
         Colors verticesColorSS;
         Graph * graph;
         uint16_t colors;
+        uint16_t maxColors;
         bool valid;
         bool solution;
 };

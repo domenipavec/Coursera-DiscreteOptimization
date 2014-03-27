@@ -28,7 +28,7 @@ class Graph {
         uint32_t nEdges;
         std::vector<Edge> edges;
         Vertices vertices;
-        std::vector<Vertices> neighbours;
+        std::vector<std::vector<uint16_t> > neighbours;
         std::vector<Vertices> cliques;
         bool useCliques;
         
@@ -38,6 +38,7 @@ class Graph {
 
 Vertices sum(const Vertices & vs1, const Vertices & vs2);
 Vertices difference(const Vertices & vs1, const Vertices & vs2);
+Vertices difference(const Vertices & vs1, const std::vector<uint16_t> & vs2);
 Vertices intersection(const Vertices & vs1, const Vertices & vs2);
 
 std::ostream &operator<<(std::ostream &os, const Vertices &vs);

@@ -36,7 +36,7 @@ void CPSolver::solve() {
         uint16_t i = it->first;
         std::cerr << i << "," << it->second << std::endl;
         
-        uint16_t color = state->verticesColorSS[i].firstBit();
-        state->setColor(i, color);
+        uint16_t color = state.verticesColorSS[i].firstBit();
+        state.setColor(i, color);
     }
 }
