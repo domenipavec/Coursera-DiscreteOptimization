@@ -34,17 +34,17 @@ State::State(const State & s) :
 {
 }
 
-State::State(Graph *g) :
-        verticesColorSS(g->nVertices, ColorSearchSpace()), 
+State::State(Graph *g, uint16_t max) :
+        verticesColorSS(g->nVertices, ColorSearchSpace(max)), 
         graph(g), 
         colors(0), 
-        maxColors(0),
+        maxColors(max),
         valid(true),
         solution(false)
 {
 }
 
-void State::setColor(uint16_t i, uint16_t color) {
+void State::setColor(const uint16_t i, const uint16_t color) {
     if (!verticesColorSS[i].set) {
         verticesColorSS[i].setColor(color);
         verticesColorSS[i].set = true;
@@ -61,23 +61,17 @@ void State::setColor(uint16_t i, uint16_t color) {
                 ++it) {
                 // set all unset neighbours that only have one option left
                 uint16_t j = *it;
-                if (!verticesColorSS[j].set) {
-                    uint16_t fb = verticesColorSS[j].firstBit();
-                    verticesColorSS[j].clearBit(fb);
-                    if (verticesColorSS[j].firstBit() >= maxColors) {
-                        setColor(j, fb);
-                    } else {
-                        verticesColorSS[j].setBit(fb);
-                    }
+                if ((!verticesColorSS[j].set) && verticesColorSS[j].isPowerOfTwo()) {
+                    setColor(j, verticesColorSS[j].firstBit());
+                    if (!valid)
+                        break;
                 }
-                if (!valid)
-                    break;
             }
         }
     }
 }
 
-void State::clearBit(uint16_t i, uint16_t bit) {
+void State::clearBit(const uint16_t i, const uint16_t bit) {
     if (!verticesColorSS[i].set) {
         verticesColorSS[i].clearBit(bit);
         // check if we still have valid options
@@ -87,32 +81,54 @@ void State::clearBit(uint16_t i, uint16_t bit) {
     }
 }
 
-ColorSearchSpace::ColorSearchSpace() {
+ColorSearchSpace::ColorSearchSpace(uint16_t max) {
     for (uint8_t i = 0; i < CSS; i++) {
-        colors[i] = 0xFFFFFFFFFFFFFFFFULL;
+        colors[i] = 0;
+    }
+    for (uint16_t m = 0; m < max; m++) {
+        setBit(m);
     }
     set = false;
 }
 
-bool ColorSearchSpace::isBitSet(uint16_t n) const {
+bool ColorSearchSpace::isBitSet(const uint16_t n) const {
     uint8_t i = n>>6;
     uint8_t bit = n&0x3f;
-    return (colors[i] & (1ULL << bit)) != 0;
+    return (colors[i] & (1ULL << bit));
 }
 
-void ColorSearchSpace::clearBit(uint16_t n) {
+bool ColorSearchSpace::isPowerOfTwo() const {
+    bool gotOne = false;
+    for (uint8_t i = 0; i < CSS; i++) {
+        if (gotOne) {
+            if (colors[i] != 0)
+                return false;
+        } else {
+            if (colors[i] != 0) {
+                if ((colors[i] & (colors[i] - 1)) == 0) {
+                    gotOne = true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+void ColorSearchSpace::clearBit(const uint16_t n) {
     uint8_t i = n>>6;
     uint8_t bit = n&0x3f;
     colors[i] &= ~(1ULL << bit);
 }
 
-void ColorSearchSpace::setBit(uint16_t n) {
+void ColorSearchSpace::setBit(const uint16_t n) {
     uint8_t i = n>>6;
     uint8_t bit = n&0x3f;
     colors[i] |= (1ULL << bit);    
 }
 
-void ColorSearchSpace::setColor(uint16_t n) {
+void ColorSearchSpace::setColor(const uint16_t n) {
     uint8_t i = n>>6;
     uint8_t bit = n&0x3f;
     for (uint8_t j = 0; j < CSS; j++) {

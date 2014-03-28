@@ -20,11 +20,12 @@ static const uint8_t CSS = 2; // number of 64 bit integers in color search space
 
 class ColorSearchSpace {
     public:
-        ColorSearchSpace();
-        bool isBitSet(uint16_t n) const;
-        void clearBit(uint16_t n);       
-        void setBit(uint16_t n);
-        void setColor(uint16_t n);
+        ColorSearchSpace(uint16_t max);
+        bool isBitSet(const uint16_t n) const;
+        bool isPowerOfTwo() const;
+        void clearBit(const uint16_t n);       
+        void setBit(const uint16_t n);
+        void setColor(const uint16_t n);
         uint16_t firstBit() const;
         bool set;
 
@@ -37,9 +38,9 @@ typedef std::vector<ColorSearchSpace> Colors;
 class State {
     public:
         State(const State & s);
-        State(Graph * g);
-        void setColor(uint16_t i, uint16_t color);
-        void clearBit(uint16_t i, uint16_t bit);
+        State(Graph * g, uint16_t max = 0);
+        void setColor(const uint16_t i, const uint16_t color);
+        void clearBit(const uint16_t i, const uint16_t bit);
         
         Colors verticesColorSS;
         Graph * graph;

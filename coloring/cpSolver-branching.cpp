@@ -49,46 +49,33 @@ State * solveRecursion(const State &s, uint16_t level) {
         return solveRecursion(s, level+1);
     }
     
-    // make a queue of all possible branches
-    std::vector<State *> branches;
-    State * newState = NULL;
     // all available colors
     for (uint16_t c = 0; c < s.colors; c++) {
         if (s.verticesColorSS[i].isBitSet(c)) {
-            newState = new State(s);
-            newState->setColor(i, c);
-            if (newState->valid) {
-                branches.push_back(newState);
-            } else {
-                delete newState;
+            State newState(s);
+            newState.setColor(i, c);
+            if (newState.valid) {
+                State * sr = solveRecursion(newState, level+1);
+                if (sr != NULL) {
+                    return sr;
+                }
             }
         }
     }
     // try using new color
     if (s.colors < s.maxColors) {
-        newState = new State(s);
-        newState->setColor(i, s.colors);
-        if (newState->valid) {
-            newState->colors++;
-            branches.push_back(newState);
-        } else {
-            delete newState;
+        State newState(s);
+        newState.setColor(i, s.colors);
+        if (newState.valid) {
+            newState.colors++;
+            State * sr = solveRecursion(newState, level+1);
+            if (sr != NULL) {
+                return sr;
+            }
         }
     }
     
-    // try all branches for solution
-    newState = NULL;
-    for (std::vector<State *>::iterator it = branches.begin(); it != branches.end(); ++it) {
-        State * sp = (*it);
-        if (newState == NULL) {
-            State * sr = solveRecursion(*sp, level+1);
-            if (sr != NULL && sr->solution) {
-                newState = sr;
-            }
-        }
-        delete sp;
-    }
-    return newState;
+    return NULL;
 }
 
 void CPSolver::solve() {
@@ -102,8 +89,8 @@ void CPSolver::solve() {
     static const uint16_t MAXMAXCOLORS = 120;
     for (uint16_t max = 2; max < MAXMAXCOLORS; max++) {
         std::cerr << "Running for " << max << " colors." << std::endl;
-        state.maxColors = max;
-        State * s = solveRecursion(state, 0);
+        State st(graph, max);
+        State * s = solveRecursion(st, 0);
         if (s != NULL && s->solution) {
             optimal = true;
             state = *s;

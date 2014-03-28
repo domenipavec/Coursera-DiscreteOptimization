@@ -11,8 +11,10 @@ OBJS := $(SOURCES:.cpp=.o)
 
 CC := g++
 
-CFLAGS := -std=c++11 -Wall -fopenmp -O3 -g -pg
-LFLAGS := -lpthread
+CFLAGS := -std=c++11 -Wall -O3
+#-fopenmp 
+LFLAGS := 
+#-lpthread
 
 all: $(BINARY)
 
