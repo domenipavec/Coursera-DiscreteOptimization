@@ -38,7 +38,7 @@ typedef std::vector<ColorSearchSpace> Colors;
 class State {
     public:
         State(const State & s);
-        State(Graph * g, uint16_t max = 0);
+        State(Graph * g, uint16_t max = 64*CSS);
         void setColor(const uint16_t i, const uint16_t color);
         void clearBit(const uint16_t i, const uint16_t bit);
         

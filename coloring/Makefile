@@ -1,5 +1,5 @@
 
-CPSOLVER_TYPE := cpSolver-branching.cpp
+CPSOLVER_TYPE := cpSolver-greedy.cpp
 CPSOLVER := cpSolver.cpp $(CPSOLVER_TYPE)
 
 SOURCES := main.cpp graph.cpp solution.cpp $(CPSOLVER)
