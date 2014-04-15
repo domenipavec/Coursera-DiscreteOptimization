@@ -8,11 +8,14 @@
  */
 
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 #include "graph.hpp"
 #include "solution.hpp"
 
 #include "cpSolver.hpp"
+#include "lsSolver.hpp"
 
 int main(int argc, char **argv)
 {
@@ -20,6 +23,9 @@ int main(int argc, char **argv)
         std::cerr << "coloring.bin requires one command line argument!" << std::endl;
         return 1;
     }
+
+    /* initialize random seed: */
+    srand (time(NULL));
 
     static const bool USE_CLIQUES = false;
     
@@ -29,7 +35,11 @@ int main(int argc, char **argv)
     solver.solve();
     Solution s = solver.solution();
     
-    std::cout << s;
+    LSSolver solverLS(&g, s);
+    solverLS.solve();
+    Solution sLS = solverLS.solution();
+    
+    std::cout << sLS;
 
     return 0;
 }

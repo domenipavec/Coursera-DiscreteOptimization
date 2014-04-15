@@ -1,8 +1,11 @@
 
+LSSOLVER_TYPE := lsSolver-unfeasible.cpp
+LSSOLVER := lsSolver.cpp $(LSSOLVER_TYPE)
+
 CPSOLVER_TYPE := cpSolver-greedy.cpp
 CPSOLVER := cpSolver.cpp $(CPSOLVER_TYPE)
 
-SOURCES := main.cpp graph.cpp solution.cpp $(CPSOLVER)
+SOURCES := main.cpp graph.cpp solution.cpp $(CPSOLVER) $(LSSOLVER)
 
 BINARY := coloring.bin
 
@@ -11,7 +14,7 @@ OBJS := $(SOURCES:.cpp=.o)
 
 CC := g++
 
-CFLAGS := -std=c++11 -Wall -O3
+CFLAGS := -std=c++11 -Wall -O0 -g
 #-fopenmp 
 LFLAGS := 
 #-lpthread
