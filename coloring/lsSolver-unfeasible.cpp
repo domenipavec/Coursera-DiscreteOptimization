@@ -97,10 +97,13 @@ uint16_t getBestColor(LSState & state, uint16_t vertex, uint16_t & bestColor) {
 }
 
 void LSSolver::solve() {
+    // reset the problem after timesMAX times
     LSState oldState = state;
-    const uint16_t timesMAX = 200;
+    const uint16_t timesMAX = 100;
     uint16_t times = 0;
-    while (state.nColors > 100) {
+    
+    // select how many colors we want
+    while (state.nColors > 99) {
         uint16_t color = getLowestUsedColor(state);
         
         removeColor(state, color);
@@ -126,7 +129,9 @@ void LSSolver::solve() {
                 
                 // change all neighbours
                 for (intList::iterator neighbour = state.graph->neighbours[*it].begin(); neighbour != state.graph->neighbours[*it].end(); ++neighbour) {
-                    if (state.verticesColors[*it] == state.verticesColors[*neighbour] || rand() %200 == 0) {
+                    // select how often to choose non faulty vertex
+                    // should be low enough to work well, but not too slow
+                    if (state.verticesColors[*it] == state.verticesColors[*neighbour] || rand() % 50 == 0) {
                         improvement = getBestColor(state, *neighbour, color);
                         if (improvement > bestImprovement || (improvement == bestImprovement && (rand() % 2 == 0))) {
                             bestColor = color;
@@ -148,7 +153,7 @@ void LSSolver::solve() {
             } else {
                 if (times < timesMAX) {
                     times++;
-                    if (times % 50 == 0) {
+                    if (times % 10 == 0) {
                         std::cerr << "Times: " << times << std::endl;
                     }
                     continue;
