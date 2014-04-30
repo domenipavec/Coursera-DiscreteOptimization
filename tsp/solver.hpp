@@ -13,6 +13,7 @@
 #include "solution.hpp"
 #include "data.hpp"
 
-Solution solve(const Data & data, const Solution & solution);
+Solution greedySolve(const Data & data, const Solution & solution);
+Solution lsSolve(const Data & data, const Solution & solution);
 
 #endif

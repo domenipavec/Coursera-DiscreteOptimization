@@ -21,20 +21,22 @@ Solution::Solution(const Data & d)
 }
     
 void Solution::visualize() const {
-    if (!system(NULL)) {
-        std::cerr << "Cannot process system command!" << std::endl;
-        exit(-1);
+    if (VISUALIZE_ENABLE) {
+        if (!system(NULL)) {
+            std::cerr << "Cannot process system command!" << std::endl;
+            exit(-1);
+        }
+        
+        std::string command("./visualize.py ");
+        command += data.filename;
+        
+        for (std::vector<uint32_t>::const_iterator it = order.cbegin(); it != order.cend(); ++it) {
+            command += " ";
+            command += std::to_string(*it);
+        }
+        
+        int __attribute__((unused)) system_return = system(command.c_str());
     }
-    
-    std::string command("./visualize.py ");
-    command += data.filename;
-    
-    for (std::vector<uint32_t>::const_iterator it = order.cbegin(); it != order.cend(); ++it) {
-        command += " ";
-        command += std::to_string(*it);
-    }
-    
-    int __attribute__((unused)) system_return = system(command.c_str());
 }
 
 double Solution::getTotal() const {

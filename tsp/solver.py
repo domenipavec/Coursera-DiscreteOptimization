@@ -3,6 +3,7 @@
 
 import os
 from subprocess import Popen, PIPE
+from visualize import visualize
 
 def solve_it(input_data):
     # Writes the inputData to a temporay file
@@ -32,6 +33,7 @@ if __name__ == '__main__':
         input_data = ''.join(input_data_file.readlines())
         input_data_file.close()
         toPrint = solve_it(input_data)
+        visualize(input_data, toPrint.split('\n')[1].split(' '))
         print "Solution:"
         print toPrint
     else:

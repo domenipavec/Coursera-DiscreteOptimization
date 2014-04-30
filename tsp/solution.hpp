@@ -16,6 +16,8 @@
 
 #include "data.hpp"
 
+#define VISUALIZE_ENABLE 0
+
 class Solution {
     public:
         Solution(const Data & d);

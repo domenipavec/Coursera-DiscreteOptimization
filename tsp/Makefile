@@ -1,7 +1,7 @@
 
-SOLVER := solver-greedy.cpp
+SOLVER := solver-3opt.cpp
 
-SOURCES := main.cpp data.cpp solution.cpp $(SOLVER)
+SOURCES := main.cpp data.cpp solution.cpp solver-greedy.cpp $(SOLVER)
 
 GPU_SOURCES := 
 
@@ -14,7 +14,7 @@ OBJS := $(GPU_OBJS) $(CPU_OBJS)
 
 CC := g++
 
-CFLAGS := -std=c++11 -Wall -O3 -fopenmp 
+CFLAGS := -std=c++11 -Wall -O3 -g -fopenmp 
 LFLAGS := -lpthread 
 #-lcudart
 
