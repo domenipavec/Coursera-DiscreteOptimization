@@ -14,6 +14,8 @@
 #include "data.hpp"
 
 Solution greedySolve(const Data & data, const Solution & solution);
-Solution lsSolve(const Data & data, const Solution & solution);
+Solution opt2Solve(const Data & data, const Solution & solution);
+Solution opt3Solve(const Data & data, const Solution & solution);
+Solution optkSolve(const Data & data, const Solution & solution);
 
 #endif

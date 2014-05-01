@@ -1,5 +1,5 @@
 
-SOLVER := solver-3opt.cpp
+SOLVER := solver-3opt.cpp solver-2opt.cpp
 
 SOURCES := main.cpp data.cpp solution.cpp solver-greedy.cpp $(SOLVER)
 

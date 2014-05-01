@@ -13,24 +13,26 @@
 #include <algorithm>
 #include <limits>
 #include <iostream>
-
+#include <chrono>
+using namespace std::chrono;
 static const double EPSILON = 0.00001;
 
 typedef std::pair<uint32_t, uint32_t> Edge;
 typedef std::pair<Edge, double> EdgeCost;
 typedef std::vector<EdgeCost> EdgeCostList;
 
-bool compareEdgeCost (EdgeCost i1, EdgeCost i2) {
+static bool compareEdgeCost (EdgeCost i1, EdgeCost i2) {
     return i1.second < i2.second;
 }
 
-Solution lsSolve(const Data & data, const Solution & solution) {
+Solution opt2Solve(const Data & data, const Solution & solution) {
     solution.visualize();
     
     Solution s(solution);
     
     while (1) {
         // sort edges, calculate total cost
+        high_resolution_clock::time_point t1 = high_resolution_clock::now();
         EdgeCostList ecl;
         double totalCost = 0;
         ecl.reserve(data.nPoints);
@@ -42,6 +44,12 @@ Solution lsSolve(const Data & data, const Solution & solution) {
             previousPoint = *it;
         }
         std::sort(ecl.begin(), ecl.end(), compareEdgeCost);
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+
+        duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+
+        std::cerr << "It took me " << time_span.count() << " seconds.";
+        std::cerr << std::endl;
         
         // replace most expensive edge with best solution (2opt)
         double bestCost = std::numeric_limits<double>::max();

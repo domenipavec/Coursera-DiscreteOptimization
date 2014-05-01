@@ -20,7 +20,7 @@ typedef std::pair<uint32_t, uint32_t> Edge;
 typedef std::pair<Edge, double> EdgeCost;
 typedef std::vector<EdgeCost> EdgeCostList;
 
-bool compareEdgeCost (EdgeCost i1, EdgeCost i2) {
+static bool compareEdgeCost (EdgeCost i1, EdgeCost i2) {
     return i1.second < i2.second;
 }
 
@@ -34,7 +34,7 @@ void orderReverse(std::vector<uint32_t> & order, uint32_t i1, uint32_t i2) {
     }
 }
 
-Solution lsSolve(const Data & data, const Solution & solution) {
+Solution opt3Solve(const Data & data, const Solution & solution) {
     solution.visualize();
     
     Solution s(solution);
